@@ -1,31 +1,31 @@
 enum MatchEventType {
-  homePoint,
-  awayPoint,
-  timeoutHome,
-  timeoutAway,
+  point,
+  timeout,
   substitution,
-  startSet,
-  endSet,
-  endMatch,
+  setStarted,
+  setFinished,
+  matchFinished,
   undo,
+}
+
+enum TeamSide {
+  home,
+  away,
 }
 
 class MatchEvent {
   final MatchEventType type;
 
+  final TeamSide? team;
+
   final DateTime timestamp;
 
-  final int set;
-
-  final int homeScore;
-
-  final int awayScore;
+  final int setNumber;
 
   const MatchEvent({
     required this.type,
+    this.team,
     required this.timestamp,
-    required this.set,
-    required this.homeScore,
-    required this.awayScore,
+    required this.setNumber,
   });
 }

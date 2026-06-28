@@ -21,9 +21,13 @@ class MatchService {
     return Match(
       id: _uuid.v4(),
 
-      homeTeam: Team(name: home),
+      homeTeam: Team(
+          id: _uuid.v4(),
+          name: home,),
 
-      awayTeam: Team(name: away),
+      awayTeam: Team(
+        id: _uuid.v4(),
+        name: away),
 
       category: category,
 

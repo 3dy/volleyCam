@@ -1,7 +1,5 @@
-import 'team.dart';
 import 'set_score.dart';
-
-
+import 'team.dart';
 
 enum MatchType {
   bestOf3,

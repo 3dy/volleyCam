@@ -1,15 +1,9 @@
 import '../models/match.dart';
 
 class MatchState {
-
   final Match match;
 
-  final List<SetState> sets;
-
   final int currentSet;
-
-  final MatchStatus status;
-
 
   final int homeScore;
 
