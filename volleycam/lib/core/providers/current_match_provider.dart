@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/match.dart';
+import '../engine/volley_engine.dart';
 
-final currentMatchProvider = StateProvider<Match?>(
-  (ref) => null,
-);
+final currentMatchProvider =
+    StateProvider<VolleyEngine?>((ref) {
+  return null;
+});
