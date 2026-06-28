@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/providers/current_match_provider.dart';
+import '../../core/models/match.dart';
+
 
 
 class ScoreboardPage extends ConsumerStatefulWidget  {
@@ -13,7 +15,25 @@ class ScoreboardPage extends ConsumerStatefulWidget  {
 
 class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
 
- 
+  void _homeScores() {
+    final engine = ref.read(currentMatchProvider);
+
+    if (engine == null) return;
+
+    setState(() {
+      engine.homeScores();
+    });
+  }
+
+  void _awayScores() {
+    final engine = ref.read(currentMatchProvider);
+
+    if (engine == null) return;
+
+    setState(() {
+      engine.awayScores();
+    });
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -41,15 +61,61 @@ class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
 
           children: [
 
-            const Text(
-              "SET 1",
-              style: TextStyle(
+            Text(
+              "SET ${engine.state.currentSet}",
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            Text(
+              engine.state.match.matchType == MatchType.bestOf3
+                  ? "Best of 3"
+                  : "Best of 5",
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Sets: ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text("0 - 0"),
+              ],
+            ),
+            const SizedBox(height: 30),
 
-            const SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+
+                Expanded(
+                  child: Text(
+                    engine.state.match.homeTeam.name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 20),
+
+                Expanded(
+                  child: Text(
+                    engine.state.match.awayTeam.name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
 
             Column(
               children: [
@@ -64,9 +130,36 @@ class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
 
                 const SizedBox(height: 20),
 
-                Text(
-                  "${engine.state.homeScore} - ${engine.state.awayScore}",
-                  style: const TextStyle(fontSize: 42),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+
+                    Text(
+                      "${engine.state.homeScore}",
+                      style: const TextStyle(
+                        fontSize: 56,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
+                        "-",
+                        style: TextStyle(
+                          fontSize: 40,
+                        ),
+                      ),
+                    ),
+
+                    Text(
+                      "${engine.state.awayScore}",
+                      style: const TextStyle(
+                        fontSize: 56,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 20),
@@ -89,26 +182,14 @@ class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
 
                 FilledButton(
 
-                  onPressed: () {
-
-                    setState(() {
-                      engine.homeScores();
-                    });
-
-                  },
+                  onPressed: _homeScores,
 
                   child: const Text("+ Local"),
                 ),
 
                 FilledButton(
 
-                  onPressed: () {
-
-                    setState(() {
-                      engine.awayScores();
-                    });
-
-                  },
+                  onPressed: _awayScores,
 
                   child: const Text("+ Visitante"),
                 ),

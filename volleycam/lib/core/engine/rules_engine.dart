@@ -1,4 +1,5 @@
 import 'match_state.dart';
+import '../models/match.dart';
 
 class RulesEngine {
   const RulesEngine();
@@ -17,5 +18,20 @@ class RulesEngine {
         (home - away).abs() >= 2;
 
     return reachedTarget && twoPointDifference;
+  }
+  bool homeWonSet(MatchState state) {
+  return state.homeScore > state.awayScore;
+  }
+
+  bool awayWonSet(MatchState state) {
+    return state.awayScore > state.homeScore;
+  }
+
+  bool isMatchFinished(MatchState state) {
+    final requiredSets =
+        state.match.matchType == MatchType.bestOf3 ? 2 : 3;
+
+    return state.homeSetsWon >= requiredSets ||
+        state.awaySetsWon >= requiredSets;
   }
 }

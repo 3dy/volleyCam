@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
+
 import 'events.dart';
 import 'match_state.dart';
 import 'score_engine.dart';
 import 'rules_engine.dart';
+import '../models/set_score.dart';
 
 class VolleyEngine {
 
@@ -26,7 +29,7 @@ class VolleyEngine {
     //   ),
     // );
       if (_rulesEngine.isSetFinished(state)) {
-      print("SET TERMINADO");
+        _finishSet();
   }
 
   }
@@ -41,9 +44,41 @@ class VolleyEngine {
     //     timestamp: DateTime.now(),
     //   ),
     // );
-  if (_rulesEngine.isSetFinished(state)) {
-      print("SET TERMINADO");
+    if (_rulesEngine.isSetFinished(state)) {
+        _finishSet();
+    }
   }
+
+  void _finishSet() {
+    int homeSetsWon = state.homeSetsWon;
+    int awaySetsWon = state.awaySetsWon;
+    final completedSets = List<SetScore>.from(state.completedSets);
+
+    completedSets.add(
+      SetScore(
+        homeScore: state.homeScore,
+        awayScore: state.awayScore,
+      ),
+    );
+
+    if (_rulesEngine.homeWonSet(state)) {
+      homeSetsWon++;
+    } else {
+      awaySetsWon++;
+    }
+
+    state = state.copyWith(
+      completedSets: completedSets,
+      homeSetsWon: homeSetsWon,
+      awaySetsWon: awaySetsWon,
+      currentSet: state.currentSet + 1,
+      homeScore: 0,
+      awayScore: 0,
+    );
+
+    debugPrint(
+      "Sets jugados: ${state.completedSets.length}",
+    );
   }
 
 }
