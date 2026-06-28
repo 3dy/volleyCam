@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -24,7 +25,9 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
 
             FilledButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                context.go('/create-match');
+              },
               icon: const Icon(Icons.add),
               label: const Text("Nuevo Partido"),
             ),

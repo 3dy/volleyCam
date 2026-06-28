@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class CreateMatchPage extends StatelessWidget {
+  const CreateMatchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -9,12 +10,12 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Nuevo Partido'),
       ),
-      body: const Center(
-        child: Text(
-          'Bienvenido a VolleyCam 🏐',
-          style: TextStyle(
-            fontSize: 24,
-          ),
+      body: Center(
+        child: FilledButton(
+          onPressed: () {
+            context.go('/scoreboard');
+          },
+          child: const Text("Iniciar Partido"),
         ),
       ),
     );
