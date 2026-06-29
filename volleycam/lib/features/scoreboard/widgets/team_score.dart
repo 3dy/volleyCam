@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'animated_score.dart';
 
 class TeamScore extends StatelessWidget {
   final String teamName;
@@ -31,12 +32,8 @@ class TeamScore extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              Text(
-                "$score",
-                style: const TextStyle(
-                  fontSize: 64,
-                  fontWeight: FontWeight.bold,
-                ),
+              AnimatedScore(
+                score: score,
               ),
 
               const SizedBox(height: 20),

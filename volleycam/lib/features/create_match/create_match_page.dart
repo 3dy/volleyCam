@@ -106,6 +106,23 @@ class _CreateMatchPageState
   }
 
   void _startMatch() {
+    
+    FocusScope.of(context).unfocus();
+
+    if (_homeController.text.trim().isEmpty ||
+      _awayController.text.trim().isEmpty) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Escribe el nombre de ambos equipos.",
+          ),
+        ),
+      );
+
+      return;
+    }
+
     final match = _matchService.createMatch(
       home: _homeController.text,
       away: _awayController.text,
