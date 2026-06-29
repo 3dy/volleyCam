@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/providers/current_match_provider.dart';
 import '../../core/providers/event_factory_provider.dart';
@@ -21,6 +22,7 @@ class ScoreboardPage extends ConsumerStatefulWidget  {
 class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
 
   void _homeScores() {
+    HapticFeedback.selectionClick(); //this will make the mobile to vibrate
     final engine = ref.read(currentMatchProvider);
 
     if (engine == null) return;
@@ -42,6 +44,7 @@ class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
   }
 
   void _awayScores() {
+    HapticFeedback.selectionClick(); //this will make the mobile to vibrate
     final engine = ref.read(currentMatchProvider);
 
     if (engine == null) return;

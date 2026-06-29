@@ -38,9 +38,18 @@ class TeamScore extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              FilledButton(
-                onPressed: onPressed,
-                child: const Text("+ Punto"),
+              SizedBox(
+                width: double.infinity,
+                height: 60,
+                child: FilledButton(
+                  onPressed: onPressed,
+                  child: const Text(
+                    "+ Punto",
+                    style: TextStyle(
+                      fontSize: 22,
+                    ),
+                  ),
+                ),
               ),
 
             ],
