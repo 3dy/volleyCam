@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/providers/current_match_provider.dart';
+import '../../core/providers/event_factory_provider.dart';
 import '../../core/models/match.dart';
+import '../../core/events/point_reason.dart';
+import 'widgets/team_score.dart';
+import 'widgets/sets_indicator.dart';
+import 'widgets/completed_sets_widget.dart';
 
 
 
@@ -20,8 +25,19 @@ class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
 
     if (engine == null) return;
 
+    final factory = ref.read(eventFactoryProvider);
+
+    final event = factory.homePoint(
+      reason: PointReason.unknown,
+      setNumber: engine.state.currentSet,
+    );
+
     setState(() {
-      engine.homeScores();
+      engine.processEvent(event);
+
+      debugPrint(
+        "Eventos registrados: ${engine.events.length}",
+      );
     });
   }
 
@@ -30,10 +46,22 @@ class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
 
     if (engine == null) return;
 
+    final factory = ref.read(eventFactoryProvider);
+
+    final event = factory.awayPoint(
+      reason: PointReason.unknown,
+      setNumber: engine.state.currentSet,
+    );
+
     setState(() {
-      engine.awayScores();
+      engine.processEvent(event);
+
+      debugPrint(
+        "Eventos registrados: ${engine.events.length}",
+      );
     });
   }
+
   @override
   Widget build(BuildContext context) {
 
@@ -53,153 +81,58 @@ class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
         title: const Text("Scoreboard"),
       ),
 
-      body: Center(
+      body: Padding(
+  padding: const EdgeInsets.all(16),
+  child: Column(
+    children: [
 
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
-
-          children: [
-
-            Text(
-              "SET ${engine.state.currentSet}",
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              engine.state.match.matchType == MatchType.bestOf3
-                  ? "Best of 3"
-                  : "Best of 5",
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  "Sets: ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text("0 - 0"),
-              ],
-            ),
-            const SizedBox(height: 30),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-
-                Expanded(
-                  child: Text(
-                    engine.state.match.homeTeam.name,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 20),
-
-                Expanded(
-                  child: Text(
-                    engine.state.match.awayTeam.name,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            Column(
-              children: [
-
-                Text(
-                  engine.state.match.homeTeam.name,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-
-                    Text(
-                      "${engine.state.homeScore}",
-                      style: const TextStyle(
-                        fontSize: 56,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(
-                        "-",
-                        style: TextStyle(
-                          fontSize: 40,
-                        ),
-                      ),
-                    ),
-
-                    Text(
-                      "${engine.state.awayScore}",
-                      style: const TextStyle(
-                        fontSize: 56,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                Text(
-                  engine.state.match.awayTeam.name,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 40),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-
-                FilledButton(
-
-                  onPressed: _homeScores,
-
-                  child: const Text("+ Local"),
-                ),
-
-                FilledButton(
-
-                  onPressed: _awayScores,
-
-                  child: const Text("+ Visitante"),
-                ),
-
-              ],
-            ),
-
-          ],
+      Text(
+        "SET ${engine.state.currentSet}",
+        style: const TextStyle(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
         ),
       ),
+
+      const SizedBox(height: 20),
+
+      Row(
+        children: [
+
+          TeamScore(
+            teamName: engine.state.match.homeTeam.name,
+            score: engine.state.homeScore,
+            onPressed: _homeScores,
+          ),
+
+          const SizedBox(width: 12),
+
+          TeamScore(
+            teamName: engine.state.match.awayTeam.name,
+            score: engine.state.awayScore,
+            onPressed: _awayScores,
+          ),
+        ],
+      ),
+      const SizedBox(height: 20),
+
+      SetsIndicator(
+        home: engine.state.homeSetsWon,
+        away: engine.state.awaySetsWon,
+      ),
+
+      const SizedBox(height: 20),
+
+      CompletedSetsWidget(
+        completedSets: engine.state.completedSets,
+      ), 
+
+      // aquí irán más widgets...
+
+    ],
+  ),
+)
+      
     );
   }
 }

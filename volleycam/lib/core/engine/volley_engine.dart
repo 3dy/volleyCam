@@ -49,6 +49,27 @@ class VolleyEngine {
     }
   }
 
+  void processEvent(MatchEvent event) {
+    events.add(event);
+
+    switch (event.type) {
+      case MatchEventType.point:
+        _processPoint(event);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  void _processPoint(MatchEvent event) {
+    if (event.team == TeamSide.home) {
+      homeScores();
+    } else {
+      awayScores();
+    }
+  }
+
   void _finishSet() {
     int homeSetsWon = state.homeSetsWon;
     int awaySetsWon = state.awaySetsWon;
