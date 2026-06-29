@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../../core/providers/current_match_provider.dart';
 import '../../core/providers/event_factory_provider.dart';
-import '../../core/models/match.dart';
+//import '../../core/models/match.dart';
 import '../../core/events/point_reason.dart';
 import 'widgets/team_score.dart';
 import 'widgets/sets_indicator.dart';

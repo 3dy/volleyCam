@@ -1,5 +1,5 @@
 import '../engine/events.dart';
-import '../events/point_reason.dart';
+import 'point_reason.dart';
 
 class EventFactory {
   const EventFactory();
