@@ -18,6 +18,12 @@ class VolleyEngine {
     required this.state,
   });
 
+  MatchState _initialState() {
+    return MatchState(
+      match: state.match,
+    );
+  }
+
   void homeScores() {
 
     state = _scoreEngine.homeScores(state);
@@ -50,17 +56,24 @@ class VolleyEngine {
   }
 
   void processEvent(MatchEvent event) {
+
     events.add(event);
 
-    switch (event.type) {
-      case MatchEventType.point:
-        _processPoint(event);
-        break;
+    _applyEvent(event);
 
-      default:
-        break;
-    }
   }
+
+  
+  void undoLastEvent() {
+
+    if (events.isEmpty) return;
+
+    events.removeLast();
+
+    _rebuildState();
+
+  }
+  
 
   void _processPoint(MatchEvent event) {
     if (event.team == TeamSide.home) {
@@ -100,6 +113,45 @@ class VolleyEngine {
     debugPrint(
       "Sets jugados: ${state.completedSets.length}",
     );
+  }
+
+  void _rebuildState() {
+
+    state = _initialState();
+
+    for (final event in events) {
+      _applyEvent(event);
+    }
+
+  }
+
+  void _applyEvent(MatchEvent event) {
+
+    switch (event.type) {
+
+      case MatchEventType.point:
+        _processPoint(event);
+        break;
+
+      case MatchEventType.timeout:
+        break;
+
+      case MatchEventType.substitution:
+        break;
+
+      case MatchEventType.setStarted:
+        break;
+
+      case MatchEventType.setFinished:
+        break;
+
+      case MatchEventType.matchFinished:
+        break;
+
+      case MatchEventType.undo:
+        break;
+    }
+
   }
 
 }

@@ -65,6 +65,16 @@ class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
     });
   }
 
+  void _undoLastEvent() {
+    final engine = ref.read(currentMatchProvider);
+
+    if (engine == null) return;
+
+    setState(() {
+      engine.undoLastEvent();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -80,61 +90,67 @@ class _ScoreboardPageState extends ConsumerState<ScoreboardPage> {
 
     return Scaffold(
 
-      appBar: AppBar(
-        title: const Text("Scoreboard"),
-      ),
+    appBar: AppBar(
+      title: const Text("Scoreboard"),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.undo),
+          onPressed: _undoLastEvent,
+        ),
+      ],
+    ),
 
       body: Padding(
-  padding: const EdgeInsets.all(16),
-  child: Column(
-    children: [
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
 
-      Text(
-        "SET ${engine.state.currentSet}",
-        style: const TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
+            Text(
+              "SET ${engine.state.currentSet}",
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            Row(
+              children: [
+
+                TeamScore(
+                  teamName: engine.state.match.homeTeam.name,
+                  score: engine.state.homeScore,
+                  onPressed: _homeScores,
+                ),
+
+                const SizedBox(width: 12),
+
+                TeamScore(
+                  teamName: engine.state.match.awayTeam.name,
+                  score: engine.state.awayScore,
+                  onPressed: _awayScores,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            SetsIndicator(
+              home: engine.state.homeSetsWon,
+              away: engine.state.awaySetsWon,
+            ),
+
+            const SizedBox(height: 20),
+
+            CompletedSetsWidget(
+              completedSets: engine.state.completedSets,
+            ), 
+
+            // aquí irán más widgets...
+
+          ],
         ),
-      ),
-
-      const SizedBox(height: 20),
-
-      Row(
-        children: [
-
-          TeamScore(
-            teamName: engine.state.match.homeTeam.name,
-            score: engine.state.homeScore,
-            onPressed: _homeScores,
-          ),
-
-          const SizedBox(width: 12),
-
-          TeamScore(
-            teamName: engine.state.match.awayTeam.name,
-            score: engine.state.awayScore,
-            onPressed: _awayScores,
-          ),
-        ],
-      ),
-      const SizedBox(height: 20),
-
-      SetsIndicator(
-        home: engine.state.homeSetsWon,
-        away: engine.state.awaySetsWon,
-      ),
-
-      const SizedBox(height: 20),
-
-      CompletedSetsWidget(
-        completedSets: engine.state.completedSets,
-      ), 
-
-      // aquí irán más widgets...
-
-    ],
-  ),
-)
+      )
       
     );
   }
